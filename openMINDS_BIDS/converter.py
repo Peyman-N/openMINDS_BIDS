@@ -7,9 +7,23 @@ import pandas as pd
 import numpy as np
 import datetime
 
+def file
 
-def subject_creation ():
-  
+
+
+
+
+def subject_creation (subjects_id,layout_dump):
+
+  participants_paths=layout_dump[layout_dump['suffix']=='participants']
+  participants_path_tsv=participants_paths[participants_paths['extension']==".json"].iat[0,0]
+
+  participants_table=pd.read_csv(participants_path_tsv, sep='\t', header=0)
+
+
+
+
+
   return subject
 
 def person_create(persons_list):

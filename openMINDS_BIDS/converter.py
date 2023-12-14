@@ -38,6 +38,8 @@ def read_json(file_path: str) -> dict:
       print(f"Error: Unable to decode JSON content from {file_path}")
       return {}
 
+
+
 def table_filter (dataframe:pd.DataFrame,filter_str:str,column:str="suffix"):
   """
   Filters a Pandas DataFrame based on a specified condition.
@@ -58,8 +60,18 @@ def table_filter (dataframe:pd.DataFrame,filter_str:str,column:str="suffix"):
       # Handle the case where the specified column is not present in the DataFrame
       KeyError(f"Error: Column '{column}' not found in the DataFrame.")
 
+
+
 def unique_items (dataFrame,colume):
-    return dataFrame[colume].unique()
+    items=dataFrame[colume].unique()
+    items_cleaned=[x for x in items if not(pd.isna(x))]
+    return items_cleaned
+
+def find_file(BIDS_layout_dataFrame,key):
+  for index,row in BIDS_layout_dataFrame.iterrows():
+    if (row["path"].find(key))>0:
+        return row
+  return False
 
 
 def experimental_approach_openminds_create (BIDS_layout_dataFrame):
@@ -81,28 +93,29 @@ def experimental_approach_openminds_create (BIDS_layout_dataFrame):
   approach_openminds=[]
   BIDS_approaches=unique_items(BIDS_layout_dataFrame,"datatype")
 
-
   for BIDS_approach in BIDS_approaches:
-    if not(BIDS_approach==NaN):
-      try:
-        approach=experimental_approach_dic[BIDS_approach]
-      except KeyError:
-        warn(f"The {BIDS_approach} is not yet part of openMINDS's acsepted experimental approaches. Please verfy for any typo and check if it is acsepted in BIDS, if it is so please get intouch with openMINDS team for implementing it.")
-
-      if isinstance(approach,list):
-      #Detects if there are multiple openMINDs approaches are assosiated with this BIDS Data type
-        for approach_delist in approach:
-          if not(approach_delist in approach_openminds_list):
-            approach_openminds_list.append(approach_delist)
-            approach_openminds.append(controlledTerms.ExperimentalApproach.by_name(approach_delist))
-      else:
-        if not(approach in approach_openminds_list):
-          approach_openminds_list.append(approach)
-          approach_openminds.append(controlledTerms.ExperimentalApproach.by_name(approach))       
-
+    try:
+      approach=experimental_approach_dic[BIDS_approach]
+    except KeyError:
+      warn(f"The {BIDS_approach} is not yet part of openMINDS's acsepted experimental approaches. Please verfy for any typo and check if it is acsepted in BIDS, if it is so please get intouch with openMINDS team for implementing it.")
+    if isinstance(approach,list):
+    #Detects if there are multiple openMINDs approaches are assosiated with this BIDS Data type
+      for approach_delist in approach:
+        if not(approach_delist in approach_openminds_list):
+          approach_openminds_list.append(approach_delist)
+          approach_openminds.append(controlledTerms.ExperimentalApproach.by_name(approach_delist))
+    else:
+      if not(approach in approach_openminds_list):
+        approach_openminds_list.append(approach)
+        approach_openminds.append(controlledTerms.ExperimentalApproach.by_name(approach))       
   return approach_openminds
     
-def tequnique_openmind(suffix)
+def license_openminds (license):
+  return controlledTerms.License.by_name(license)
+
+
+  
+def tequnique_openmind(suffix):
   experimental_approach_dic={
     "angio"	:"Angiogram"	,
     "M0map"	:"Equilibrium magnetization (M0) map"	,
@@ -176,16 +189,22 @@ def tequnique_openmind(suffix)
     "nirs"  : "Near-Infrared Spectroscopy ",
     "motion": "Motion",
   }
-  
+
+  try:
+    tequnique=experimental_approach_dic[suffix]
+    return controlledTerms.Technique.by_name(tequnique)
+  except KeyError:
+    return None
 
 
 
 def tequniques_openmind_create (BIDS_layout_dataFrame):
-
-  
-  approach_openminds_list=[]
   approach_openminds=[]
-  BIDS_approaches=unique_items(BIDS_layout_dataFrame,"datatype")
+  BIDS_approaches=unique_items(BIDS_layout_dataFrame,"suffix")
+  for approach in BIDS_approaches:
+    approach_=tequnique_openmind(approach)
+    if not(approach_ is None):
+      approach_openminds.append(approach_)
 
 def file_creation ():
 
@@ -250,11 +269,23 @@ def dataset_version_create (bids_layout,dataset_description,layout_df):
   #Fetch the dataset type from dataset description file 
   if "DatasetType" in dataset_description:
     dataset_type=controlledTerms.SemanticDataType.by_name(dataset_description["DatasetType"])
+  else:
+    dataset_type=None
   
   #Fetch the digitalIdentifier from dataset description file 
   if "DatasetDOI" in dataset_description:
     digital_identifier=core.DOI(
       identifier=dataset_description["DatasetDOI"])
+  else:
+    digital_identifier=None
+    
+  if "License" in dataset_description:
+    license=(dataset_description["License"])
+  elif find_file(layout_df,"License"):
+    warn("This is not implemented yet")
+  else:
+    license=None
+    
 
   if "EthicsApprovals" in dataset_description:
     #to be compleated ethics_assessment

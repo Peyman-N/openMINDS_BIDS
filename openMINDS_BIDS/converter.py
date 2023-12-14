@@ -62,7 +62,7 @@ def unique_items (dataFrame,colume):
     return dataFrame[colume].unique()
 
 
-def experimental_approach_openminds (BIDS_layout_dataFrame):
+def experimental_approach_openminds_create (BIDS_layout_dataFrame):
 
   experimental_approach_dic={"func":"neuroimaging",
   "dwi":["neuroimaging","neural connectivity"],
@@ -77,20 +77,115 @@ def experimental_approach_openminds (BIDS_layout_dataFrame):
   "micr":"microscopy",
   "nirs":"neuroimaging"}
 
+  approach_openminds_list=[]
   approach_openminds=[]
-  approaches=unique_items(BIDS_layout_dataFrame,"datatype")
+  BIDS_approaches=unique_items(BIDS_layout_dataFrame,"datatype")
+
+
+  for BIDS_approach in BIDS_approaches:
+    if not(BIDS_approach==NaN):
+      try:
+        approach=experimental_approach_dic[BIDS_approach]
+      except KeyError:
+        warn(f"The {BIDS_approach} is not yet part of openMINDS's acsepted experimental approaches. Please verfy for any typo and check if it is acsepted in BIDS, if it is so please get intouch with openMINDS team for implementing it.")
+
+      if isinstance(approach,list):
+      #Detects if there are multiple openMINDs approaches are assosiated with this BIDS Data type
+        for approach_delist in approach:
+          if not(approach_delist in approach_openminds_list):
+            approach_openminds_list.append(approach_delist)
+            approach_openminds.append(controlledTerms.ExperimentalApproach.by_name(approach_delist))
+      else:
+        if not(approach in approach_openminds_list):
+          approach_openminds_list.append(approach)
+          approach_openminds.append(controlledTerms.ExperimentalApproach.by_name(approach))       
+
+  return approach_openminds
+    
+def tequnique_openmind(suffix)
+  experimental_approach_dic={
+    "angio"	:"Angiogram"	,
+    "M0map"	:"Equilibrium magnetization (M0) map"	,
+    "FLASH"	:"Fast-Low-Angle-Shot image"	,
+    "FLAIR"	:"Fluid attenuated inversion recovery image"	,
+    "UNIT1" :"Homogeneous (flat) T1-weighted MP2RAGE image"	,
+    "inplaneT1"	:"Inplane T1"	,
+    "inplaneT2" :"Inplane T2"	,
+    "R1map"	:"Longitudinal relaxation rate image"	,
+    "T1map"	:"Longitudinal relaxation time image"	,
+    "MTVmap":"Macromolecular tissue volume (MTV) image"	,
+    "MTRmap":"Magnetization transfer ratio image"	,
+    "MTsat"	:"Magnetization transfer saturation image"	,
+    "MWFmap":"Myelin water fraction image"	,
+    "S0map"	:"Observed signal amplitude (S0) image"	,
+    "R2starmap":"Observed transverse relaxation rate image"	,
+    "T2starmap":"Observed transverse relaxation time image"	,
+    "PDT2"	:"PD and T2 weighted image"	,
+    "PDw"	  :"Proton density (PD) weighted image"	,
+    "PD"	  :"Proton density image"	,
+    "PDmap"	:"Proton density image"	,
+    "Chimap":"Quantitative susceptibility map (QSM)"	,
+    "RB1map":"RF receive sensitivity map"	,
+    "TB1map":"RF transmit field image"	,
+    "T1rho"	:"T1 in rotating frame (T1 rho) image"	,
+    "T1w"	  :"T1-weighted image"	,
+    "T2w"   :"T2-weighted image"	,
+    "T2star":"T2* image"	,
+    "T2starw":"T2star weighted image"	,
+    "R2map"	:"True transverse relaxation rate image"	,
+    "T2map"	:"True transverse relaxation time image"	,
+    "bold"  : "	Blood-Oxygen-Level Dependent image",
+    "cbv"   : "Cerebral blood volume image",
+    "phase" : "Phase image",
+    "defacemask"  : "Defacing masks",
+    "epi"   : "EPI",
+    "fieldmap": "Fieldmap",
+    "magnitude": "Magnitude",
+    "magnitude1": "Magnitude",
+    "magnitude2": "Magnitude",
+    "phase1": "Phase",
+    "phase2": "Phase",
+    "phasediff": "Phase-difference",
+    "dwi"   : "Diffusion-weighted image",
+    "sbref" : "Single-band reference image",
+    "asl"   : "Arterial Spin Labeling",
+    "m0scan": "M0",
+    "eeg"   : "Electroencephalography",
+    "ieeg"  : "Intracranial Electroencephalography",
+    "physio": "Physiological continuous recordings",
+    "stim"  : "stimulation continuous recordings",
+    "beh"   : "Behavioral experiments",
+    "pet"   : "Positron Emission Tomography",
+    "2PE"   : "2-photon excitation microscopy",
+    "BF"    : "Bright-field microscopy",
+    "CARS"  : "Coherent anti-Stokes Raman spectroscopy",
+    "CONF"  : "Confocal microscopy",
+    "DIC"   : "Differential interference contrast microscopy",
+    "DF"    : "Dark-field microscopy",
+    "FLUO"  : "Fluorescence microscopy",
+    "MPE"   : "Multi-photon excitation microscopy",
+    "NLO"   : "Nonlinear optical microscopy",
+    "OCT"   : "Optical coherence tomography",
+    "PC"    : "Phase-contrast microscopy",
+    "PLI"   : "Polarized-light microscopy",
+    "SEM"   : "Scanning electron microscopy",
+    "SPIM"  : "Selective plane illumination microscopy",
+    "SR"    : "Super-resolution microscopy",
+    "TEM"   : "Transmission electron microscopy",
+    "uCT"   : "Micro-CT",
+    "nirs"  : "Near-Infrared Spectroscopy ",
+    "motion": "Motion",
+  }
   
 
-  for approach in approaches:
-     
 
 
+def tequniques_openmind_create (BIDS_layout_dataFrame):
 
-
-
-
-def tequniques_openmind (teqnique_BIDS):
-
+  
+  approach_openminds_list=[]
+  approach_openminds=[]
+  BIDS_approaches=unique_items(BIDS_layout_dataFrame,"datatype")
 
 def file_creation ():
 

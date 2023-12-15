@@ -260,6 +260,31 @@ def person_create(persons_list):
     return new_person
   else:
     warn("The Authour section of the BIDS-dataset description file was emphty") 
+    return None
+
+
+def contribution_create (contributors_list:str):
+  try:
+    if contributors_list.find(",")>0:
+      contributors_list=contributors_list.split(",")
+    if isinstance(contributors_list,list):
+      contributors=[]
+      for contributor in contributors_list:
+        #we should implement a situation for 
+        names=contributor.split()
+        if len(names)>1
+        last_name=names[-1]
+        first_name=" ".join(names[:-1])
+        new_person=core.Person(
+            family_name=last_name,
+            given_name=first_name
+          )
+        contributor_openminds=core.Contribution(
+
+        )
+  except AttributeError:
+    if contributors_list==[]
+
 
 
 def dataset_version_create (bids_layout,dataset_description,layout_df):
@@ -286,12 +311,18 @@ def dataset_version_create (bids_layout,dataset_description,layout_df):
   else:
     license=None
     
+  author=person_create(dataset_description["Authors"])
 
   if "EthicsApprovals" in dataset_description:
     #to be compleated ethics_assessment
     ethics_assessment=controlledTerms.EthicsAssessment.by_name("EU compliant")
 
-  
+  if "Acknowledgements" in dataset_description:
+    other_contribution=dataset_description["Acknowledge"]
+
+  if "HowToAcknowledge" in dataset_description:
+    how_to_cite=dataset_description["HowToAcknowledge"]
+
 
   #Detect th
   experimental_approach

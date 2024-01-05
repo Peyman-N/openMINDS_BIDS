@@ -202,9 +202,14 @@ def tequniques_openmind_create (BIDS_layout_dataFrame):
   approach_openminds=[]
   BIDS_approaches=unique_items(BIDS_layout_dataFrame,"suffix")
   for approach in BIDS_approaches:
-    approach_=tequnique_openmind(approach)
-    if not(approach_ is None):
-      approach_openminds.append(approach_)
+    _approach_=tequnique_openmind(approach)
+    if not(_approach_ is None):
+      approach_openminds.append(_approach_)
+
+def funding_openMINDS (funding_list):
+  if isinstance(funding_list,list):
+    for _fund_ in funding_list:
+      
 
 def file_creation ():
 
@@ -305,7 +310,7 @@ def dataset_version_create (bids_layout,dataset_description,layout_df):
     digital_identifier=None
     
   if "License" in dataset_description:
-    license=(dataset_description["License"])
+    license=license_openminds(dataset_description["License"])
   elif find_file(layout_df,"License"):
     warn("This is not implemented yet")
   else:
@@ -316,12 +321,21 @@ def dataset_version_create (bids_layout,dataset_description,layout_df):
   if "EthicsApprovals" in dataset_description:
     #to be compleated ethics_assessment
     ethics_assessment=controlledTerms.EthicsAssessment.by_name("EU compliant")
+  else:
+    ethics_assessment=None
 
   if "Acknowledgements" in dataset_description:
     other_contribution=dataset_description["Acknowledge"]
+  else:
+    other_contribution=None
 
   if "HowToAcknowledge" in dataset_description:
     how_to_cite=dataset_description["HowToAcknowledge"]
+  else:
+    how_to_cite=None
+
+  if "Funding" in dataset_description:
+    funding=funding_openMINDS(dataset_description["Funding"])
 
 
   #Detect th

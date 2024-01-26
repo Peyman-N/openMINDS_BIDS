@@ -208,7 +208,9 @@ def tequniques_openmind_create (BIDS_layout_dataFrame):
 
 def funding_openMINDS (funding_list):
   if isinstance(funding_list,list):
-    for _fund_ in funding_list:
+    Funding=[]
+    for _funding_ in funding_list:
+      
       
 
 def file_creation ():
@@ -318,12 +320,6 @@ def dataset_version_create (bids_layout,dataset_description,layout_df):
     
   author=person_create(dataset_description["Authors"])
 
-  if "EthicsApprovals" in dataset_description:
-    #to be compleated ethics_assessment
-    ethics_assessment=controlledTerms.EthicsAssessment.by_name("EU compliant")
-  else:
-    ethics_assessment=None
-
   if "Acknowledgements" in dataset_description:
     other_contribution=dataset_description["Acknowledge"]
   else:
@@ -336,8 +332,14 @@ def dataset_version_create (bids_layout,dataset_description,layout_df):
 
   if "Funding" in dataset_description:
     funding=funding_openMINDS(dataset_description["Funding"])
+  else:
+    funding=None
 
-
+  if "EthicsApprovals" in dataset_description:
+    #to be compleated ethics_assessment
+    ethics_assessment=controlledTerms.EthicsAssessment.by_name("EU compliant")
+  else:
+    ethics_assessment=None
   #Detect th
   experimental_approach
 

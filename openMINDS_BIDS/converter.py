@@ -307,6 +307,7 @@ def dataset_version_create (bids_layout,dataset_description,layout_df):
   if "License" in dataset_description:
     license=(dataset_description["License"])
   elif find_file(layout_df,"License"):
+  # The license in file should be implemented
     warn("This is not implemented yet")
   else:
     license=None
@@ -323,7 +324,7 @@ def dataset_version_create (bids_layout,dataset_description,layout_df):
   if "HowToAcknowledge" in dataset_description:
     how_to_cite=dataset_description["HowToAcknowledge"]
 
-
+  
   #Detect th
   experimental_approach
 
